@@ -15,10 +15,10 @@
 
 #include "HTTP_Method.h"
 
-enum HTTPUploadStatus { UPLOAD_FILE_START, UPLOAD_FILE_WRITE, UPLOAD_FILE_END,
-                        UPLOAD_FILE_ABORTED };
-enum HTTPClientStatus { HC_NONE, HC_WAIT_READ, HC_WAIT_CLOSE };
-enum HTTPAuthMethod { BASIC_AUTH, /* DIGEST_AUTH */ };
+enum HTTPUploadStatus2 { UPLOAD_FILE_START2, UPLOAD_FILE_WRITE2, UPLOAD_FILE_END2,
+                        UPLOAD_FILE_ABORTED2 };
+enum HTTPClientStatus2 { HC_NONE2, HC_WAIT_READ2, HC_WAIT_CLOSE2 };
+enum HTTPAuthMethod2 { BASIC_AUTH2, /* DIGEST_AUTH */ };
 
 #ifndef HTTP_UPLOAD_BUFLEN
 #define HTTP_UPLOAD_BUFLEN 1436
@@ -30,14 +30,14 @@ enum HTTPAuthMethod { BASIC_AUTH, /* DIGEST_AUTH */ };
 typedef std::function<void(void)> THandlerFunction;
 
 typedef struct {
-  HTTPUploadStatus status;
+  HTTPUploadStatus2 status;
   String  filename;
   String  name;
   String  type;
   size_t  totalSize;    // file size
   size_t  currentSize;  // size of data currently in buf
   uint8_t buf[HTTP_UPLOAD_BUFLEN];
-} HTTPUpload;
+} HTTPUpload2;
 
 namespace fs {
 class FS;
@@ -62,7 +62,7 @@ public:
   void stop();
 
   bool authenticate(const char * username, const char * password);
-  void requestAuthentication(HTTPAuthMethod mode = BASIC_AUTH, const char* realm = NULL, const String& authFailMsg = String("") );
+  void requestAuthentication(HTTPAuthMethod2 mode = BASIC_AUTH2, const char* realm = NULL, const String& authFailMsg = String("") );
 
   void on(const String &uri, THandlerFunction handler);
   void on(const String &uri, HTTPMethod method, THandlerFunction fn);
@@ -73,7 +73,7 @@ public:
 
   String uri();
   HTTPMethod method();
-  HTTPUpload& upload();
+  HTTPUpload2& upload();
 
   String pathArg(unsigned int i); // get request path argument by number
   String arg(String name);        // get request argument value by name
@@ -148,7 +148,7 @@ protected:
   /** The currently active request */
   httpsserver::HTTPRequest *_activeRequest;
   httpsserver::HTTPResponse *_activeResponse;
-  HTTPUpload *_activeUpload;
+  HTTPUpload2 *_activeUpload;
   httpsserver::ResourceParameters *_activeParams;
 
   /** default node */

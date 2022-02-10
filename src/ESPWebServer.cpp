@@ -101,9 +101,9 @@ bool ESPWebServer::authenticate(const char * username, const char * password) {
   return false;
 }
 
-void ESPWebServer::requestAuthentication(HTTPAuthMethod mode, const char* realm, const String& authFailMsg) {
+void ESPWebServer::requestAuthentication(HTTPAuthMethod2 mode, const char* realm, const String& authFailMsg) {
   if (realm == NULL) realm = "Login Required";
-  if (mode == BASIC_AUTH) {
+  if (mode == BASIC_AUTH2) {
     std::string authArg = "Basic realm=\"";
     authArg += realm;
     authArg += "\"";
@@ -185,7 +185,7 @@ HTTPMethod ESPWebServer::method() {
   return HTTP_ANY;
 }
 
-HTTPUpload& ESPWebServer::upload() {
+HTTPUpload2& ESPWebServer::upload() {
   return *_activeUpload;
 }
 
@@ -423,9 +423,9 @@ void ESPWebServer::_handlerWrapper(
       if (filename != "") {
         // This field is a file. Use the uploader
         std::string mimeType = parser->getFieldMimeType();
-        HTTPUpload uploader;
+        HTTPUpload2 uploader;
         node->_wrapper->_activeUpload = &uploader;
-        uploader.status = UPLOAD_FILE_START;
+        uploader.status = UPLOAD_FILE_START2;
         uploader.name = String(name.c_str());
         uploader.filename = String(filename.c_str());
         uploader.type = String(mimeType.c_str());
@@ -434,13 +434,13 @@ void ESPWebServer::_handlerWrapper(
         // First call to the uploader callback
         node->_wrappedUploadHandler();
         // Now loop over the data
-        uploader.status = UPLOAD_FILE_WRITE;
+        uploader.status = UPLOAD_FILE_WRITE2;
         while(!parser->endOfField()) {
           uploader.currentSize = parser->read(uploader.buf, sizeof(uploader.buf));
           uploader.totalSize += uploader.currentSize;
           node->_wrappedUploadHandler();
         }
-        uploader.status = UPLOAD_FILE_END;
+        uploader.status = UPLOAD_FILE_END2;
         node->_wrappedUploadHandler();
         node->_wrapper->_activeUpload = NULL;
       } else {
